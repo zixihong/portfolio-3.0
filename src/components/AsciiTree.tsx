@@ -3,6 +3,16 @@ import type { AsciiTreeData } from "../data/ascii-tree"
 import { figContents } from "../data/projects"
 import { ContentPanel } from "./ContentPanel"
 
+// Boost color brightness for better contrast on dark backgrounds
+function boostColor(hex: string, factor: number): string {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  const boost = (v: number) => Math.min(255, Math.round(v * factor))
+  return `#${boost(r).toString(16).padStart(2, '0')}${boost(g).toString(16).padStart(2, '0')}${boost(b).toString(16).padStart(2, '0')}`
+}
+
+
 interface Span {
   text: string
   color: string
@@ -112,7 +122,7 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
                     key={si}
                     className={span.region ? "cursor-pointer" : undefined}
                     style={{
-                      color: isActive ? "#ffffff" : span.color,
+                      color: isActive ? "#ffffff" : boostColor(span.color, 1.4),
                       transition: "color 0.15s ease",
                     }}
                     onMouseEnter={
@@ -152,8 +162,8 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
       </div>
 
       {/* Sylvia Plath quote - bottom */}
-      <div className="fixed bottom-5 right-5 text-white/15 font-mono z-50 max-w-md text-right select-text uppercase text-xs">
-        <a href="https://www.goodreads.com/quotes/7511-i-saw-my-life-branching-out-before-me-like-the" target="_blank" rel="noopener noreferrer" className="hover:text-white/30 transition-colors">I SAW MY LIFE BRANCHING OUT BEFORE ME LIKE THE GREEN FIG TREE IN THE STORY. FROM THE TIP OF EVERY BRANCH, LIKE A FAT PURPLE FIG, A WONDERFUL FUTURE BECKONED AND WINKED. — SYLVIA PLATH</a>
+      <div className="fixed bottom-5 right-5 text-white/40 font-mono z-50 max-w-md text-right select-text uppercase text-xs">
+        <a href="https://www.goodreads.com/quotes/7511-i-saw-my-life-branching-out-before-me-like-the" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">I SAW MY LIFE BRANCHING OUT BEFORE ME LIKE THE GREEN FIG TREE IN THE STORY. FROM THE TIP OF EVERY BRANCH, LIKE A FAT PURPLE FIG, A WONDERFUL FUTURE BECKONED AND WINKED. — SYLVIA PLATH</a>
       </div>
 
       <ContentPanel
