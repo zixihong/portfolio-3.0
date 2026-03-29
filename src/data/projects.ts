@@ -16,37 +16,16 @@ export interface FigContent {
 export const figContents: FigContent[] = [
   {
     id: "fig-1",
-    label: "Projects",
+    label: "Building",
     items: [
       {
-        title: "Project placeholder",
+        title: "Building placeholder",
         description: "Add your projects here.",
-        tags: ["placeholder"],
       },
     ],
   },
   {
     id: "fig-2",
-    label: "About",
-    items: [
-      {
-        title: "About placeholder",
-        description: "Add your bio here.",
-      },
-    ],
-  },
-  {
-    id: "fig-3",
-    label: "Experience",
-    items: [
-      {
-        title: "Experience placeholder",
-        description: "Add your experience here.",
-      },
-    ],
-  },
-  {
-    id: "fig-4",
     label: "Writing",
     items: [
       {
@@ -56,12 +35,32 @@ export const figContents: FigContent[] = [
     ],
   },
   {
-    id: "fig-5",
-    label: "Contact",
+    id: "fig-3",
+    label: "About",
     items: [
       {
-        title: "Contact placeholder",
-        description: "Add your contact info here.",
+        title: "About placeholder",
+        description: "Add your bio here.",
+      },
+    ],
+  },
+  {
+    id: "fig-4",
+    label: "Researching",
+    items: [
+      {
+        title: "Researching placeholder",
+        description: "Add your research here.",
+      },
+    ],
+  },
+  {
+    id: "fig-5",
+    label: "Investing",
+    items: [
+      {
+        title: "Investing placeholder",
+        description: "Add your investments here.",
       },
     ],
   },

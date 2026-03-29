@@ -87,16 +87,16 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
   }
 
   return (
-    <div className="relative flex items-center justify-center min-h-screen">
+    <div className="relative flex items-center justify-center h-screen overflow-hidden">
       <div
-        className="ascii-tree-wrapper transition-all duration-300"
+        className="ascii-tree-wrapper transition-all duration-300 relative z-10"
         style={{
-          transform: selectedRegion ? "translateX(-10%)" : "translateX(0)",
+          transform: selectedRegion ? "translateX(-10%)" : "none",
         }}
       >
         <pre
           className="leading-none select-none"
-          style={{ fontSize: "min(0.55vw, 8px)", lineHeight: "1.15" }}
+          style={{ fontSize: "min(1vw, 1vh)", lineHeight: "1.15" }}
         >
           {spanRows.map((row, ri) => (
             <div key={ri}>
@@ -132,12 +132,23 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
           ))}
         </pre>
 
-        {activeRegion && (
-          <div className="fixed top-6 left-1/2 -translate-x-1/2 bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-full text-sm font-mono z-50 pointer-events-none">
-            {figContents.find((f) => f.id === activeRegion)?.label ||
-              activeRegion}
+        <div className="fixed top-16 left-1/2 -translate-x-1/2 text-white text-sm font-mono z-50 pointer-events-none uppercase">
+          <div className="relative border border-white px-4 py-2">
+            <span className="absolute -top-[0.7em] -left-[0.5em] bg-black px-[3px] leading-none text-sm">┌</span>
+            <span className="absolute -top-[0.7em] -right-[0.5em] bg-black px-[3px] leading-none text-sm">┐</span>
+            <span className="absolute -bottom-[0.7em] -left-[0.5em] bg-black px-[3px] leading-none text-sm">└</span>
+            <span className="absolute -bottom-[0.7em] -right-[0.5em] bg-black px-[3px] leading-none text-sm">┘</span>
+            {activeRegion
+              ? (figContents.find((f) => f.id === activeRegion)?.label || activeRegion)
+              : "Bryan Hong"}
           </div>
-        )}
+        </div>
+
+      </div>
+
+      {/* Sylvia Plath quote - bottom */}
+      <div className="fixed bottom-5 right-5 text-white/15 font-mono z-50 max-w-md text-right select-text uppercase text-xs">
+        <a href="https://www.goodreads.com/quotes/7511-i-saw-my-life-branching-out-before-me-like-the" target="_blank" rel="noopener noreferrer" className="hover:text-white/30 transition-colors">I SAW MY LIFE BRANCHING OUT BEFORE ME LIKE THE GREEN FIG TREE IN THE STORY. FROM THE TIP OF EVERY BRANCH, LIKE A FAT PURPLE FIG, A WONDERFUL FUTURE BECKONED AND WINKED. — SYLVIA PLATH</a>
       </div>
 
       <ContentPanel
