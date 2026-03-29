@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { background: #111; color: #0f0; font-family: monospace; margin: 20px; }
+  h2 { color: #fff; font-size: 14px; }
+  p { color: #aaa; font-size: 12px; }
+  #grid { font-size: 6px; line-height: 1.15; letter-spacing: 0; white-space: pre; cursor: crosshair; user-select: none; }
+  #grid span { display: inline; }
+  #grid span:hover { background: #333; }
+  #grid span.fig { color: #c0f; }
+  #grid span.point1 { background: red; color: white; }
+  #grid span.point2 { background: blue; color: white; }
+  #grid span.split-line { background: #ff0; color: #000; }
+  #info { color: #fff; margin: 10px 0; font-size: 13px; }
+  button { background: #0f0; color: #000; border: none; padding: 8px 16px; cursor: pointer; font-family: monospace; font-size: 13px; margin-top: 10px; }
+  button:hover { background: #0a0; }
+  #output { color: #ff0; margin-top: 10px; font-size: 13px; }
+</style>
+</head>
+<body>
+<h2>Click two points to draw the split line between the two left figs</h2>
+<p>Click the first point, then the second point. A yellow line will appear. When you're happy, click "Copy split config".</p>
+<div id="info">Click first point...</div>
+<div id="grid"></div>
+<button id="copyBtn" style="display:none" onclick="copyConfig()">Copy split config</button>
+<div id="output"></div>
+
+<script>
+let data;
+let point1 = null, point2 = null;
+let splitCells = [];
+
+async function init() {
+  const resp = await fetch('./ascii-data.json');
+  data = await resp.json();
+  render();
+}
+
+function render() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+
+  // Pre-compute split line cells
+  splitCells = [];
+  if (point1 && point2) {
+    const dr = point2.row - point1.row;
+    const dc = point2.col - point1.col;
+    const steps = Math.max(Math.abs(dr), Math.abs(dc));
+    for (let s = 0; s <= steps; s++) {
+      const r = Math.round(point1.row + (dr * s) / steps);
+      const c = Math.round(point1.col + (dc * s) / steps);
+      splitCells.push(`${r},${c}`);
+    }
+  }
+  const splitSet = new Set(splitCells);
+
+  for (let r = 0; r < data.rows; r++) {
+    const line = document.createElement('div');
+    for (let c = 0; c < data.cols; c++) {
+      const i = r * data.cols + c;
+      const ch = data.chars[i];
+      const region = data.regions[i];
+      const span = document.createElement('span');
+      span.textContent = ch;
+      span.style.color = data.colors[i];
+
+      const key = `${r},${c}`;
+      if (point1 && point1.row === r && point1.col === c) {
+        span.className = 'point1';
+      } else if (point2 && point2.row === r && point2.col === c) {
+        span.className = 'point2';
+      } else if (splitSet.has(key)) {
+        span.className = 'split-line';
+      } else if (region && region.startsWith('fig-')) {
+        span.className = 'fig';
+      }
+
+      // Only make the left fig area clickable (rough bounds)
+      if (r >= 35 && r <= 68 && c >= 80 && c <= 150 && ch !== ' ') {
+        span.onclick = () => handleClick(r, c);
+      }
+      line.appendChild(span);
+    }
+    grid.appendChild(line);
+  }
+}
+
+function handleClick(row, col) {
+  if (!point1) {
+    point1 = { row, col };
+    document.getElementById('info').textContent = `Point 1: row=${row}, col=${col}. Now click second point...`;
+  } else if (!point2) {
+    point2 = { row, col };
+    document.getElementById('info').textContent = `Point 1: (${point1.row},${point1.col}) -> Point 2: (${point2.row},${point2.col}). Line drawn!`;
+    document.getElementById('copyBtn').style.display = 'inline-block';
+  } else {
+    // Reset
+    point1 = { row, col };
+    point2 = null;
+    splitCells = [];
+    document.getElementById('info').textContent = `Point 1: row=${row}, col=${col}. Now click second point...`;
+    document.getElementById('copyBtn').style.display = 'none';
+  }
+  render();
+}
+
+function copyConfig() {
+  const config = JSON.stringify({ point1, point2 });
+  navigator.clipboard.writeText(config).then(() => {
+    document.getElementById('output').textContent = `Copied! ${config}`;
+  }).catch(() => {
+    document.getElementById('output').textContent = `Config: ${config}`;
+  });
+}
+
+init();
+</script>
+</body>
+</html>

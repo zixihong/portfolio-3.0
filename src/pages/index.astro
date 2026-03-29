@@ -1,0 +1,40 @@
+---
+import Layout from '../layouts/Layout.astro'
+import { AsciiTree } from '../components/AsciiTree'
+import { readFileSync, existsSync } from 'fs'
+import { resolve } from 'path'
+
+const jsonPath = resolve(process.cwd(), 'src/data/ascii-tree.json')
+
+let asciiData
+if (existsSync(jsonPath)) {
+  asciiData = JSON.parse(readFileSync(jsonPath, 'utf-8'))
+} else {
+  // Placeholder when no image has been processed yet
+  const cols = 60
+  const rows = 20
+  const chars = Array(rows).fill(null).map((_, r) => {
+    return Array(cols).fill(null).map((_, c) => {
+      const cx = cols / 2, cy = rows * 0.4
+      const dx = (c - cx) / (cols * 0.3), dy = (r - cy) / (rows * 0.5)
+      const d = Math.sqrt(dx * dx + dy * dy)
+      if (r > rows * 0.7 && Math.abs(c - cx) < 2) return '#'
+      if (d < 0.7) return ['@', '%', '#', '*', '+'][Math.floor(Math.random() * 5)]
+      return ' '
+    }).join('')
+  }).join('')
+  asciiData = {
+    cols,
+    rows,
+    chars,
+    colors: Array(cols * rows).fill('#4ade80'),
+    regions: Array(cols * rows).fill(null),
+  }
+}
+---
+
+<Layout title="bh">
+  <main class="relative overflow-hidden">
+    <AsciiTree client:load data={asciiData} />
+  </main>
+</Layout>
