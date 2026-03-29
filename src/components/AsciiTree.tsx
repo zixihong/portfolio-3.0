@@ -65,6 +65,11 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
 
   const handleClick = useCallback((region: string | null) => {
     if (region) {
+      const fig = figContents.find((f) => f.id === region)
+      if (fig?.label === "About") {
+        window.location.href = "/about"
+        return
+      }
       setSelectedRegion((prev) => (prev === region ? null : region))
     }
   }, [])
