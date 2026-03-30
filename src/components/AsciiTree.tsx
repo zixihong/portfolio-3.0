@@ -1,7 +1,6 @@
 import { useState, useMemo, useCallback } from "react"
 import type { AsciiTreeData } from "../data/ascii-tree"
 import { figContents } from "../data/projects"
-import { ContentPanel } from "./ContentPanel"
 
 // Boost color brightness for better contrast on dark backgrounds
 function boostColor(hex: string, factor: number): string {
@@ -68,7 +67,7 @@ function buildRegionCounters(): Record<string, number> {
 
 export function AsciiTree({ data }: { data: AsciiTreeData }) {
   const [activeRegion, setActiveRegion] = useState<string | null>(null)
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
+  const [selectedRegion] = useState<string | null>(null)
 
   const spanRows = useMemo(() => groupCharsIntoSpans(data), [data])
   const regionTextMap = useMemo(() => buildRegionTextMap(), [])
@@ -76,15 +75,11 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
   const handleClick = useCallback((region: string | null) => {
     if (region) {
       const fig = figContents.find((f) => f.id === region)
-      if (fig?.label === "About") {
-        window.location.href = "/about"
-        return
+      if (fig) {
+        window.location.href = `/${fig.label.toLowerCase()}`
       }
-      setSelectedRegion((prev) => (prev === region ? null : region))
     }
   }, [])
-
-  const selectedContent = figContents.find((f) => f.id === selectedRegion)
 
   // Reset counters each render so text tiles consistently
   const counters = buildRegionCounters()
@@ -106,7 +101,7 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
       <div
         className="ascii-tree-wrapper transition-all duration-300 relative z-10"
         style={{
-          transform: selectedRegion ? "translateX(-10%)" : "none",
+          transform: "none",
         }}
       >
         <pre
@@ -166,10 +161,6 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
         <a href="https://www.goodreads.com/quotes/7511-i-saw-my-life-branching-out-before-me-like-the" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">I SAW MY LIFE BRANCHING OUT BEFORE ME LIKE THE GREEN FIG TREE IN THE STORY. FROM THE TIP OF EVERY BRANCH, LIKE A FAT PURPLE FIG, A WONDERFUL FUTURE BECKONED AND WINKED. — SYLVIA PLATH</a>
       </div>
 
-      <ContentPanel
-        content={selectedContent || null}
-        onClose={() => setSelectedRegion(null)}
-      />
     </div>
   )
 }
