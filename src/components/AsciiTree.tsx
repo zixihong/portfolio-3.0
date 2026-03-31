@@ -106,7 +106,7 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
       >
         <pre
           className="leading-none select-none"
-          style={{ fontSize: "min(1vw, 1vh)", lineHeight: "1.15" }}
+          style={{ fontSize: "var(--tree-font-size)", lineHeight: "1.15" }}
         >
           {spanRows.map((row, ri) => (
             <div key={ri}>
@@ -142,7 +142,7 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
           ))}
         </pre>
 
-        <div className="fixed top-16 left-1/2 -translate-x-1/2 text-white text-sm font-mono z-50 pointer-events-none uppercase">
+        <div className="fixed top-4 sm:top-16 left-1/2 -translate-x-1/2 text-white text-xs sm:text-sm font-mono z-50 pointer-events-none uppercase">
           <div className="relative border border-white px-4 py-2">
             <span className="absolute -top-[0.7em] -left-[0.5em] bg-black px-[3px] leading-none text-sm">┌</span>
             <span className="absolute -top-[0.7em] -right-[0.5em] bg-black px-[3px] leading-none text-sm">┐</span>
@@ -157,7 +157,7 @@ export function AsciiTree({ data }: { data: AsciiTreeData }) {
       </div>
 
       {/* Sylvia Plath quote - bottom */}
-      <div className="fixed bottom-5 right-5 text-white/40 font-mono z-50 max-w-md text-right select-text uppercase text-xs">
+      <div className="fixed bottom-2 right-2 sm:bottom-5 sm:right-5 text-white/40 font-mono z-50 max-w-[90vw] sm:max-w-md text-right select-text uppercase text-[10px] sm:text-xs">
         <a href="https://www.goodreads.com/quotes/7511-i-saw-my-life-branching-out-before-me-like-the" target="_blank" rel="noopener noreferrer" className="hover:text-white/70 transition-colors">I SAW MY LIFE BRANCHING OUT BEFORE ME LIKE THE GREEN FIG TREE IN THE STORY. FROM THE TIP OF EVERY BRANCH, LIKE A FAT PURPLE FIG, A WONDERFUL FUTURE BECKONED AND WINKED. — SYLVIA PLATH</a>
       </div>
 

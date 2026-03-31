@@ -4,6 +4,20 @@
   --font-mono: "JetBrains Mono", monospace;
 }
 
+:root {
+  --tree-font-size: min(0.56vw, 1.035vh);
+}
+@media (min-width: 768px) {
+  :root {
+    --tree-font-size: min(0.56vw, 0.85vh);
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    --tree-font-size: min(1vw, 0.85vh);
+  }
+}
+
 body {
   font-family: var(--font-mono);
 }
