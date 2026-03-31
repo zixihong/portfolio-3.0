@@ -14,7 +14,7 @@ const { post } = Astro.props
 const { Content } = await render(post)
 ---
 
-<Layout title={`${post.data.title} — bh`}>
+<Layout title={post.data.title.toLowerCase()}>
   <main class="flex items-center justify-center min-h-screen p-4 sm:p-8">
     <div class="max-w-2xl font-mono text-xs sm:text-sm text-white uppercase space-y-4 sm:space-y-6">
       <div class="space-y-2">
