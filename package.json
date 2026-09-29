@@ -6,6 +6,7 @@
     "node": ">=22.12.0"
   },
   "scripts": {
+    "edit-figs": "tsx scripts/edit-figs.ts",
     "generate-ascii": "tsx scripts/generate-ascii.ts",
     "dev": "astro dev",
     "build": "astro build",
@@ -18,6 +19,7 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "astro": "^6.1.1",
+    "inklet": "^0.1.2",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "sharp": "^0.34.5",

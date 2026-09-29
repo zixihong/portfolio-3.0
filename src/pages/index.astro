@@ -3,11 +3,30 @@ import Layout from '../layouts/Layout.astro'
 import { AsciiTree } from '../components/AsciiTree'
 import { readFileSync, existsSync } from 'fs'
 import { resolve } from 'path'
+import { buildRegionMap, type AsciiConfig } from 'inklet'
+import { figContents } from '../data/projects'
 
 const jsonPath = resolve(process.cwd(), 'src/data/ascii-tree.json')
 
 let asciiData
-if (existsSync(jsonPath)) {
+const paintedPath = resolve(process.cwd(), 'src/data/ascii-config.json')
+if (existsSync(paintedPath)) {
+  const config: AsciiConfig = JSON.parse(readFileSync(paintedPath, 'utf-8'))
+  const regionConfig = {
+    regions: config.regionConfig.regions.map(region => {
+      const fig = figContents.find(fig => fig.label.toLowerCase() === region.label?.trim().toLowerCase())
+      if (!fig) throw new Error(`Unknown fig region "${region.label}". Use: ${figContents.map(fig => fig.label).join(', ')}`)
+      return { ...region, id: fig.id }
+    }),
+  }
+  asciiData = {
+    cols: config.data.cols,
+    rows: config.data.rows,
+    chars: config.data.chars,
+    colors: config.data.colorIndices.map(index => config.data.palette[index]),
+    regions: buildRegionMap(config.data, regionConfig).regionMap,
+  }
+} else if (existsSync(jsonPath)) {
   asciiData = JSON.parse(readFileSync(jsonPath, 'utf-8'))
 } else {
   // Placeholder when no image has been processed yet
